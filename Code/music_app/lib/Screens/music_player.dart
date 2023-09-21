@@ -1,24 +1,26 @@
 import 'dart:math';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_app/Modal/song.dart';
 
 class MusciPlayer extends StatefulWidget {
-  final Song song;
-  const MusciPlayer({super.key, required this.song});
+  final int currentSong;
+  final List<Song> songs;
+  const MusciPlayer(
+      {super.key, required this.songs, required this.currentSong});
 
   @override
   State<MusciPlayer> createState() => _MusciPlayerState();
 }
 
 class _MusciPlayerState extends State<MusciPlayer> {
+  late int currentIndex;
+  late Song song;
   AudioPlayer player = AudioPlayer();
   List<Song> songs = [];
   // late ShakeDetector detector; //shake detector of this screen
   Duration? totalDuration;
   Duration? position;
-  late int songPlayingMode;
   Random random = Random();
 
   _seekTo(int microseconds) {
@@ -35,28 +37,39 @@ class _MusciPlayerState extends State<MusciPlayer> {
   }
 
   _play() {
-    widget.song.isPlaying = !widget.song.isPlaying;
-    player.play(UrlSource(widget.song.audio));
+    song.isPlaying = !song.isPlaying;
+    player.play(UrlSource(song.audio));
     setState(() {});
   }
 
   _pause() {
-    widget.song.isPlaying = !widget.song.isPlaying;
+    song.isPlaying = !song.isPlaying;
     player.pause();
     setState(() {});
   }
 
   _getDurationOfSong() async {
-    await player.onDurationChanged.listen((Duration d) {
+    player.onDurationChanged.listen((Duration d) {
       setState(() => totalDuration = d);
     });
+  }
+
+  playNextOrPrevSong(int index) {
+    _pause();
+    currentIndex += index;
+    song = widget.songs[currentIndex];
+    _play();
+    _getDurationOfSong();
+    _getPositionOfSong();
   }
 
   @override
   void initState() {
     super.initState();
-    widget.song.isPlaying = true;
-    player.play(UrlSource(widget.song.audio));
+    song = widget.songs[widget.currentSong];
+    currentIndex = widget.currentSong;
+    song.isPlaying = true;
+    player.play(UrlSource(song.audio));
     _getDurationOfSong();
     _getPositionOfSong();
   }
@@ -83,7 +96,7 @@ class _MusciPlayerState extends State<MusciPlayer> {
                     backgroundColor: Colors.blueAccent,
                     radius: 132,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(widget.song.image),
+                      backgroundImage: NetworkImage(song.image),
                       radius: 130,
                     ),
                   ),
@@ -106,12 +119,12 @@ class _MusciPlayerState extends State<MusciPlayer> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20, bottom: 8),
-              child: Text(widget.song.trackName,
+              child: Text(song.trackName,
                   style: TextStyle(
                       color: Colors.purpleAccent,
                       fontSize: deviceSize.width / 18)),
             ),
-            Text(widget.song.artistName,
+            Text(song.artistName,
                 style: TextStyle(
                     color: Colors.blueAccent, fontSize: deviceSize.width / 24)),
             Container(
@@ -154,7 +167,9 @@ class _MusciPlayerState extends State<MusciPlayer> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      playNextOrPrevSong(-1);
+                    },
                     icon: Icon(
                       Icons.skip_previous,
                       size: 45,
@@ -163,15 +178,17 @@ class _MusciPlayerState extends State<MusciPlayer> {
                 IconButton(
                     onPressed: () {
                       //play or pause song
-                      widget.song.isPlaying ? _pause() : _play();
+                      song.isPlaying ? _pause() : _play();
                     },
                     icon: Icon(
-                      widget.song.isPlaying ? Icons.pause : Icons.play_arrow,
+                      song.isPlaying ? Icons.pause : Icons.play_arrow,
                       size: 45,
                       color: Colors.blueAccent,
                     )),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      playNextOrPrevSong(1);
+                    },
                     icon: Icon(
                       Icons.skip_next,
                       size: 45,

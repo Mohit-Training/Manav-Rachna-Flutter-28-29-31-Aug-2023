@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "381139477840",
+    "project_id": "training-f5fc0",
+    "storage_bucket": "training-f5fc0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381139477840:android:9499300ad3ee90bdecb855",
+        "android_client_info": {
+          "package_name": "com.example.music_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381139477840-u89cqrpdu81niq2hjq34e5ek1rc1o7de.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.music_app",
+            "certificate_hash": "27b44f78197a9d31d5323f59c5a28ecb6b3c5de0"
+          }
+        },
+        {
+          "client_id": "381139477840-mlhcs6a8nh4mhipeh3f4vu3ohk2t80ll.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiYndQ4RV-B-W9l-c7_dXw0D49nMH7iHo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381139477840-mlhcs6a8nh4mhipeh3f4vu3ohk2t80ll.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

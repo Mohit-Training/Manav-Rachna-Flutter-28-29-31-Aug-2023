@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_app/Modal/song.dart';
@@ -7,6 +6,7 @@ import 'package:music_app/Screens/music_player.dart';
 import 'package:music_app/Services/song_services.dart';
 import 'package:music_app/Utils/UtilServices.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shake/shake.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -46,7 +46,12 @@ class _HomeState extends State<Home> {
     songListFuture = songServices.searchSongs('Honey Singh');
     player.onPlayerComplete.listen((event) {
       songList[currentSong].isPlaying = false;
-      setState(() {});
+      playSong(currentSong + 1);
+    });
+
+    ShakeDetector.autoStart(onPhoneShake: () {
+      pauseSong(currentSong);
+      playSong(currentSong + 1);
     });
   }
 
@@ -123,7 +128,7 @@ class _HomeState extends State<Home> {
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
-                                      MusciPlayer(song: songList[index]),
+                                      MusciPlayer(songs: songList,currentSong:index),
                                 ));
                               },
                               leading: Image.network((songList[index]).image),
